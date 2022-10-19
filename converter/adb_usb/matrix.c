@@ -793,8 +793,13 @@ void hook_late_init(void)
     // initialize matrix state: all keys off
     for (uint8_t i=0; i < MATRIX_ROWS; i++) matrix[i] = 0x00;
 
-    // LED on
-    DDRD |= (1<<6); PORTD |= (1<<6);
+    // turn off pro micro clone's on-board led outputs
+    DDRB &= ~(1<<0); // left
+    DDRD &= ~(1<<5); // right
+
+    // setup led outputs
+    DDRD |= (1<<4);
+    DDRC |= (1<<6);
 
     adb_host_init();
     adb_host_reset_hard();
@@ -802,8 +807,6 @@ void hook_late_init(void)
 
     device_scan();
 
-    // LED off
-    DDRD |= (1<<6); PORTD &= ~(1<<6);
     return;
 }
 
@@ -830,6 +833,19 @@ void led_set(uint8_t usb_led)
         }
     }
     adb_host_kbd_led(ADB_ADDR_KEYBOARD, ~usb_led);
+
+    //converter side leds
+    //TODO: makefile flag
+    if (usb_led & (1 << USB_LED_CAPS_LOCK)) {
+        PORTC |= (1<<6);
+    } else {
+        PORTC &= ~(1<<6);
+    }
+    if (usb_led & (1 << USB_LED_NUM_LOCK)) {
+        PORTD |= (1<<4);
+    } else {
+        PORTD &= ~(1<<4);
+    }
 }
 
 void hook_main_loop(void)
