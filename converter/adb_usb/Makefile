@@ -1,3 +1,6 @@
+# adding keymap here so i don't have to retype
+KEYMAP ?= cnorthway
+
 # Target file name (without extension).
 TARGET ?= adb_usb
 
