@@ -27,7 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define DESCRIPTION     convert ADB keyboard to USB
 
 /* matrix size */
-#define MATRIX_ROWS 16  // keycode bit: 3-0
+#define MATRIX_ROWS 17  // keycode bit: 3-0 // + one for DIP switches :)
 #define MATRIX_COLS 8   // keycode bit: 6-4
 
 #define MATRIX_ROW(code)    ((code)>>3&0x0F)

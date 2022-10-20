@@ -76,6 +76,28 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     K36,K37,K3A,K66,        K31,        K68,K6A,K7C,NO, NO, K7D,  K3B,K3D,K3C,  K52,    K41,K5F  \
 )
 
+/**
+ * Extra macro to handle layout of DIP switches
+ * Maps D00-D03 to F20-F23 on the unimap layout.
+ */
+#define UNIMAP_ADB_WITH_DIP( \
+    K35,    K7A,K78,K63,K76,K60,K61,K62,K64,K65,K6D,K67,K6F,      K69,K6B,K71,              K7F,      \
+    K32,K12,K13,K14,K15,K17,K16,K1A,K1C,K19,K1D,K1B,K18,K5D,K33,  K72,K73,K74,  K47,K51,K4B,K43, K48, \
+    K30,K0C,K0D,K0E,K0F,K11,K10,K20,K22,K1F,K23,K21,K1E,    K2A,  K75,K77,K79,  K59,K5B,K5C,K4E, K49, \
+    K39,K00,K01,K02,K03,K05,K04,K26,K28,K25,K29,K27,    K70,K24,                K56,K57,K58,K45, K4A, \
+    K38,K0A,K06,K07,K08,K09,K0B,K2D,K2E,K2B,K2F,K2C,    K5E,K7B,      K3E,      K53,K54,K55,K4C,      \
+    K36,K3A,K37,K66,        K31,            K68,K6A,    K7C,K7D,  K3B,K3D,K3C,  K52,K5F,K41,     K42, \
+    D00, D01, D02, D03 \
+) UNIMAP( \
+            K42,NO, NO, NO, NO, NO, NO, D00,D01,D02,D03,K7F,                                     \
+    K35,    K7A,K78,K63,K76,K60,K61,K62,K64,K65,K6D,K67,K6F,      K69,K6B,K71,      K49,K48,K4A, \
+    K32,K12,K13,K14,K15,K17,K16,K1A,K1C,K19,K1D,K1B,K18,K5D,K33,  K72,K73,K74,  K47,K51,K4B,K43, \
+    K30,K0C,K0D,K0E,K0F,K11,K10,K20,K22,K1F,K23,K21,K1E,    K2A,  K75,K77,K79,  K59,K5B,K5C,K4E, \
+    K39,K00,K01,K02,K03,K05,K04,K26,K28,K25,K29,K27,    K70,K24,                K56,K57,K58,K45, \
+    K38,K0A,K06,K07,K08,K09,K0B,K2D,K2E,K2B,K2F,K2C,    K5E,K7B,      K3E,      K53,K54,K55,K4C, \
+    K36,K37,K3A,K66,        K31,        K68,K6A,K7C,NO, NO, K7D,  K3B,K3D,K3C,  K52,    K41,K5F  \
+)
+
 
 // https://github.com/tmk/tmk_keyboard/wiki/Apple-Desktop-Bus#scan-codes
 const uint8_t PROGMEM unimap_trans[MATRIX_ROWS][MATRIX_COLS] = {
@@ -240,6 +262,14 @@ const uint8_t PROGMEM unimap_trans[MATRIX_ROWS][MATRIX_COLS] = {
             UNIMAP_RCTRL,           // 0x7D
             UNIMAP_RGUI,            // 0x7E
             UNIMAP_F24,             // 0x7F     power key
+        },
+        {
+            // below are NOT adb scan codes! extra positions in matrix
+            // to handle DIP switches.
+            UNIMAP_F20,             // DIP0
+            UNIMAP_F21,             // DIP1
+            UNIMAP_F22,             // DIP2
+            UNIMAP_F23,             // DIP3
         }
 };
 

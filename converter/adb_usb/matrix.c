@@ -793,7 +793,7 @@ void hook_late_init(void)
     // initialize matrix state: all keys off
     for (uint8_t i=0; i < MATRIX_ROWS; i++) matrix[i] = 0x00;
 
-    // turn off pro micro clone's on-board led outputs
+    // turn off pro micro clone's on-board led outputs (set to input)
     DDRB &= ~(1<<0); // left
     DDRD &= ~(1<<5); // right
 
@@ -812,10 +812,41 @@ void hook_late_init(void)
 
 void matrix_init(void)
 {
+    // setup ports for DIP switches as input
+    // pro micro pins 6 7 8 9 -> PD7 PE6 PB4 PB5
+    DDRD &= ~(1<<7); // DIP3
+    DDRE &= ~(1<<6); // DIP2
+    DDRB &= ~(1<<4); // DIP1
+    DDRB &= ~(1<<5); // DIP0
+    // set internal pullups, ON connects switch to GND
+    PORTD |= (1<<7); // DIP3
+    PORTE |= (1<<6); // DIP2
+    PORTB |= (1<<4); // DIP1
+    PORTB |= (1<<5); // DIP0
+}
+
+/*
+ * Helper to set matrix buffer values when dip switches
+ * are switched. turns off matrix pos when value is 1
+ * because switch connects a pullup and GND, so off=logic high.
+ */
+void set_dip(uint8_t pos, uint8_t val)
+{
+    if (val) {
+        matrix[16] &= ~(1<<pos);
+    }
+    else {
+        matrix[16] |= (1<<pos);
+    }
 }
 
 uint8_t matrix_scan(void)
 {
+    // scan only dip switches (adb key handler does the rest)
+    set_dip(0, PINB & 1<<5);
+    set_dip(1, PINB & 1<<4);
+    set_dip(2, PINE & 1<<6);
+    set_dip(3, PIND & 1<<7);
     return 0;
 }
 
@@ -834,8 +865,7 @@ void led_set(uint8_t usb_led)
     }
     adb_host_kbd_led(ADB_ADDR_KEYBOARD, ~usb_led);
 
-    //converter side leds
-    //TODO: makefile flag
+    // converter side leds
     if (usb_led & (1 << USB_LED_CAPS_LOCK)) {
         PORTC |= (1<<6);
     } else {
