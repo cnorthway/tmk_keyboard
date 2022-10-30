@@ -18,6 +18,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef CONFIG_H
 #define CONFIG_H
 
+// Enable support for extra I/O on shield PCB
+#define PROMICRO_SHIELD
+
+#ifdef PROMICRO_SHIELD
+#define LEDS_ENABLE // enable LED outputs for num & caps lock
+#define DIP_ENABLE // enable DIP switch scanning support in matrix
+#endif
+
 
 #define VENDOR_ID       0xFEED
 #define PRODUCT_ID      0x0ADB
@@ -27,7 +35,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define DESCRIPTION     convert ADB keyboard to USB
 
 /* matrix size */
-#define MATRIX_ROWS 17  // keycode bit: 3-0 // + one for DIP switches :)
+#ifdef DIP_ENABLE
+#define MATRIX_ROWS 17  // keycode bit: 3-0 + one for DIP switches
+#else
+#define MATRIX_ROWS 16  // keycode bit: 3-0
+#endif
 #define MATRIX_COLS 8   // keycode bit: 6-4
 
 #define MATRIX_ROW(code)    ((code)>>3&0x0F)
@@ -63,5 +75,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     matrix_is_on(MATRIX_ROW(ADB_POWER), MATRIX_COL(ADB_POWER)) \
 )
 #endif
+
 
 #endif

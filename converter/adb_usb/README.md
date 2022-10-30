@@ -1,3 +1,15 @@
+# Notes for Pro Micro Shield
+
+- `config.h` has some `#define`s for features on the shield, make sure they're enabled.
+- To buid a keymap that supports the DIP switches, use the new `UNIMAP_ADB_WITH_DIP`
+  macro to build a unimap layout. Example usage can be seen in the `unimap_cnorthway.c`
+  file. Keep in mind higher layers will override lower layers if both are active.
+- Pro Micros come with the Arduino/Caterina bootloader by default, so the `dfu`
+  target won't work. Use avrdude as shown in `flash.sh` or flash a dfu
+  capable bootloader (untested).
+
+original README follows:
+
 ADB to USB keyboard converter
 =============================
 This firmware converts Apple ADB keyboard/mouse protocol to USB and you can use old ADB keyboard/mouse on modern computer. It works on TMK ADB-USB converter or AVR microcontroller(ATMega32U4/2).

@@ -793,13 +793,17 @@ void hook_late_init(void)
     // initialize matrix state: all keys off
     for (uint8_t i=0; i < MATRIX_ROWS; i++) matrix[i] = 0x00;
 
-    // turn off pro micro clone's on-board led outputs (set to input)
+#ifdef PROMICRO_SHIELD
+    // turn off pro micro's on-board led outputs (set to input)
     DDRB &= ~(1<<0); // left
     DDRD &= ~(1<<5); // right
+#endif
 
+#ifdef LEDS_ENABLE
     // setup led outputs
     DDRD |= (1<<4);
     DDRC |= (1<<6);
+#endif
 
     adb_host_init();
     adb_host_reset_hard();
@@ -812,6 +816,7 @@ void hook_late_init(void)
 
 void matrix_init(void)
 {
+#ifdef DIP_ENABLE
     // setup ports for DIP switches as input
     // pro micro pins 6 7 8 9 -> PD7 PE6 PB4 PB5
     DDRD &= ~(1<<7); // DIP3
@@ -823,6 +828,7 @@ void matrix_init(void)
     PORTE |= (1<<6); // DIP2
     PORTB |= (1<<4); // DIP1
     PORTB |= (1<<5); // DIP0
+#endif
 }
 
 /*
@@ -843,10 +849,12 @@ void set_dip(uint8_t pos, uint8_t val)
 uint8_t matrix_scan(void)
 {
     // scan only dip switches (adb key handler does the rest)
+#ifdef DIP_ENABLE
     set_dip(0, PINB & 1<<5);
     set_dip(1, PINB & 1<<4);
     set_dip(2, PINE & 1<<6);
     set_dip(3, PIND & 1<<7);
+#endif
     return 0;
 }
 
@@ -865,6 +873,7 @@ void led_set(uint8_t usb_led)
     }
     adb_host_kbd_led(ADB_ADDR_KEYBOARD, ~usb_led);
 
+#ifdef LEDS_ENABLE
     // converter side leds
     if (usb_led & (1 << USB_LED_CAPS_LOCK)) {
         PORTC |= (1<<6);
@@ -876,6 +885,7 @@ void led_set(uint8_t usb_led)
     } else {
         PORTD &= ~(1<<4);
     }
+#endif
 }
 
 void hook_main_loop(void)
