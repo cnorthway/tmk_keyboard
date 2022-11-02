@@ -4,6 +4,9 @@ KEYMAP ?= cnorthway
 # Target file name (without extension).
 TARGET ?= adb_usb
 
+# Command to flash converter
+PROGRAM_CMD ?= avrdude -p atmega32u4 -c avr109 -P /dev/ttyACM0 -U flash:w:$(TARGET).hex
+
 # Directory common source filess exist
 TMK_DIR ?= ../../tmk_core
 

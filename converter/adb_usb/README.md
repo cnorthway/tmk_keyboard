@@ -4,9 +4,10 @@
 - To buid a keymap that supports the DIP switches, use the new `UNIMAP_ADB_WITH_DIP`
   macro to build a unimap layout. Example usage can be seen in the `unimap_cnorthway.c`
   file. Keep in mind higher layers will override lower layers if both are active.
-- Pro Micros come with the Arduino/Caterina bootloader by default, so the `dfu`
-  target won't work. Use avrdude as shown in `flash.sh` or flash a dfu
-  capable bootloader (untested).
+- Pro Micros come with the Arduino/Caterina bootloader by default, and the
+  `make program` target is configured to use AVRdude to flash the firmware.
+  If you're using another bootloader or your system is configured differently,
+  edit the `PROGRAM_CMD` variable in the Makefile.
 
 original README follows:
 
